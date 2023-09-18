@@ -165,9 +165,9 @@ int main (void)
         return(1);
     }
 
-    value_ptr = onchip_ptr + 100;
-    format_ptr = onchip_ptr + 500;
-    result_ptr = onchip_ptr + 1000;
+    value_ptr = onchip_ptr + 120;
+    format_ptr = onchip_ptr + 256;
+    result_ptr = onchip_ptr + 384;
 
         clock_gettime(CLOCK_MONOTONIC, &begin2);
         memcpy((void*)value_ptr, SRAM0, sizeof(__fp16)*(rows+nnz));

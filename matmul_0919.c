@@ -38,14 +38,14 @@ int main (void)
         int test=0;
         double a,b,c,d;
         struct timespec begin0, end0;
-    struct timespec begin1, end1;
-    struct timespec begin2, end2;
-    struct timespec begin3, end3;
+		struct timespec begin1, end1;
+		struct timespec begin2, end2;
+		struct timespec begin3, end3;
 
         //printf("rows-cols-nnz : ");
         //scanf("%hhu-%hhu-%hhu", &rows, &cols, &nnz);
 		
-		 __fp16 value[6] = {1.03, 5.2, 7, 3.1, 10, 2};
+		__fp16 value[6] = {1.03, 5.2, 7, 3.1, 10, 2};
 		uint8_t row[6] = {1, 2, 6, 10, 11, 14};
 		uint8_t col[6] = {0, 3, 7, 11, 13, 14};
 		
@@ -55,8 +55,8 @@ int main (void)
 
 
         uint8_t *row_idx = (uint8_t *)malloc(nnz * sizeof(uint8_t));
-    uint8_t *col_idx = (uint8_t *)malloc(nnz * sizeof(uint8_t));
-    __fp16 *values = (__fp16 *)malloc(nnz * sizeof(__fp16));
+		uint8_t *col_idx = (uint8_t *)malloc(nnz * sizeof(uint8_t));
+		__fp16 *values = (__fp16 *)malloc(nnz * sizeof(__fp16));
 	
 		for (i = 0; i < nnz; i++)
 		{
@@ -76,15 +76,7 @@ int main (void)
         for (i=0; i<nnz; i++){
                 uint8_t row, col;
                 __fp16 value;
-
-                //row = i;
-                //col = i;
-                //value = 7.7 + i;
                 fprintf(matrix, "%hhu %hhu %f\n", row_idx[i], col_idx[i], values[i]);
-
-                //row_idx[i] = row;
-                //col_idx[i] = col;
-                //values[i] = value;
         }
         printf("[NOTICE] matrix.txt has been created or overwritten\n");
 
@@ -111,10 +103,8 @@ int main (void)
         }
         row_ptr[rows] = nnz;
 
-        __fp16 vector[rows];
-        for (i=0; i<rows; i++){
-                vector[i] = 1.0;
-        }
+        //__fp16 vector[rows];
+		__fp16 vector[16] = {1, 3.1, 31, 0.41, 0.18, 6.31, 3, 8, 0, 1.2, 57.1, 31.3, 4.1, 1.2, 75, 31};
 
         __fp16 SRAM0[rows+nnz];
         uint8_t SRAM1[nnz+rows+1];
@@ -124,8 +114,8 @@ int main (void)
         memcpy(SRAM0, vector, sizeof(__fp16)*rows);
         memcpy(SRAM0+rows, values, sizeof(__fp16)*nnz);
 
-        memcpy(SRAM1, col_idx, sizeof(uint8_t)*nnz);
-        memcpy(SRAM1+nnz, row_ptr, sizeof(uint8_t)*(rows+1));
+		memcpy(SRAM1, row_ptr, sizeof(uint8_t)*(rows+1));
+		memcpy(SRAM1+rows+1, col_idx, sizeof(uint8_t)*nnz);
         clock_gettime(CLOCK_MONOTONIC, &end0);
 
         clock_gettime(CLOCK_MONOTONIC, &begin1);

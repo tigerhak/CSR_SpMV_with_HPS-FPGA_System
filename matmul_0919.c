@@ -45,7 +45,7 @@ int main (void)
         //printf("rows-cols-nnz : ");
         //scanf("%hhu-%hhu-%hhu", &rows, &cols, &nnz);
 		
-		 double value[6] = {1.03, 5.2, 7, 3.1, 10, 2};
+		 __fp16 value[6] = {1.03, 5.2, 7, 3.1, 10, 2};
 		uint8_t row[6] = {1, 2, 6, 10, 11, 14};
 		uint8_t col[6] = {0, 3, 7, 11, 13, 14};
 		

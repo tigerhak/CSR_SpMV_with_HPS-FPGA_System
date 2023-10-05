@@ -195,7 +195,14 @@ int main(void){
 		printf("[HW output] ");
 		for(i=0; i<512; i++)
         {
-                printf("%d  ", *(onchip_ptr+i));
+                // 32비트 정수를 부동 소수점 숫자로 변환하여 출력
+                uint32_t int_value = *(value_ptr + i);
+                __fp16 float_values[2];
+                memcpy(float_values, &int_value, sizeof(__fp16) * 2);
+
+                // 두 개의 부동 소수점 숫자를 출력
+                printf("%f ", (float)float_values[0]);
+                printf("%f ", (float)float_values[1]);
         }
 		
 	

@@ -91,12 +91,12 @@ int main(void){
 	{
 		for (i=0; i<current_idx; i++)
 		{
-			if (coo_row[i] = row_idx && coo_col[i] = col_idx) return (1);
+			if (coo_row[i] == row_idx && coo_col[i] == col_idx) return (1);
 		}
 		return (0);
 	}		
 	
-	int max_attempts = 10000; // max attempts to find pairs
+	int max_attempts = 100; // max attempts to find pairs
 	
 	printf("\n* input initialization\n");
 	clock_gettime(CLOCK_MONOTONIC, &begin0);
@@ -110,7 +110,7 @@ int main(void){
 			if (coo_row[i] > 16) coo_row[i]=16;
 			if (coo_col[i] > 16) coo_col[i]=16;
 			attempts++;
-		} while (isDuplicate(row, col, row[i], col[i], i) && attempts < max_attempts);
+		} while (isDuplicate(coo_row, coo_col, coo_row[i], coo_col[i], i) && attempts < max_attempts);
 	
 		if (attempts >= max_attempts)
 		{

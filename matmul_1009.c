@@ -91,12 +91,12 @@ int main(void){
 	{
 		for (i=0; i<current_idx; i++)
 		{
-			if (coo_row[i] = row_idx && coo_col[i] = col_idx) return (1);
+			if (coo_row[i] == row_idx && coo_col[i] == col_idx) return (1);
 		}
 		return (0);
 	}		
 	
-	int max_attempts = 10000; // max attempts to find pairs
+	int max_attempts = 100; // max attempts to find pairs
 	
 	printf("\n* input initialization\n");
 	clock_gettime(CLOCK_MONOTONIC, &begin0);
@@ -110,7 +110,7 @@ int main(void){
 			if (coo_row[i] > 16) coo_row[i]=16;
 			if (coo_col[i] > 16) coo_col[i]=16;
 			attempts++;
-		} while (isDuplicate(row, col, row[i], col[i], i) && attempts < max_attempts);
+		} while (isDuplicate(coo_row, coo_col, coo_row[i], coo_col[i], i) && attempts < max_attempts);
 	
 		if (attempts >= max_attempts)
 		{
@@ -127,8 +127,8 @@ int main(void){
 	clock_gettime(CLOCK_MONOTONIC, &end0);
 	
 	// make matrix.txt
-	FILE *matrixFile = fopen("matrix.txt", "w");
-	if (matrixFile = NULL)
+	FILE *matrixFile = fopen("/home/linaro/matrix.txt", "w");
+	if (matrixFile == NULL)
 	{
 		printf("[ERROR] write in matrix.txt un-available");
 		return (1);
@@ -141,6 +141,7 @@ int main(void){
 	}
 	
 	fclose(matrixFile);
+	
 	
 	// Print COO format matrix
 	printf("[coo_row] ");
@@ -257,7 +258,7 @@ int main(void){
 	
 	// make output.txt
 	
-	FILE *outputFile = fopen("output.txt", "w");
+	FILE *outputFile = fopen("/home/linaro/output.txt", "w");
 	if (outputFile = NULL)
 	{
 		printf("[ERROR] write in output.txt un-available");

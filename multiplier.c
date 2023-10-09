@@ -96,6 +96,35 @@ int main(void){
     }
     fclose(matrixFile);
 	
+	FILE *vectorFile = fopen("/home/linaro/vector.txt", "r");
+    if (vectorFile == NULL) {
+        printf("[ERROR] Unable to read vector.txt\n");
+        return 1;
+    }
+	
+	float inputss[16];
+	__fp16 in_vector[16];
+	
+	// "vector.txt" 파일에서 데이터를 읽어와서 vector 배열에 저장
+    for (i = 0; i < 16; i++) {
+        if (fscanf(vectorFile, "%f", &inputss[i]) != 1) {
+            printf("[ERROR] Failed to read data from vector.txt\n");
+            fclose(vectorFile);
+            return 1;
+        }
+    }
+
+    // "vector.txt" 파일 닫기
+    fclose(vectorFile);
+
+    // 읽어온 vector 데이터를 사용하거나 출력할 수 있음
+    printf("[input_vector] ");
+    for (i = 0; i < 16; i++) {
+		in_vector[i] = (__fp16)inputss[i];
+        printf("%f ", (float)in_vector[i]);
+    }
+	printf("\n");
+
 	// Print COO format matrix
 	printf("[coo_row] ");
 	for (i=0; i<num_nnz; i++){
@@ -107,18 +136,15 @@ int main(void){
 		printf("%hhu ", coo_col[i]);
 	}
 	printf("\n");
-	printf("[mat_vector] ");
+	printf("[matrix] ");
 	for (i=0; i<16; i++){
 		printf("%f ", value[i]);
 	}
 	printf("\n");
-	printf("\n* all in_vector value is 1\n");
 	
-	// Make input vector
-	__fp16 in_vector[16] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 	
 	// SW Multiplication
-	clock_gettime(CLOCK_MONOTONIC, &begin1);
+	clock_gettime(CLOCK_MONOTONIC, &begin0);
     __fp16 result_sw[16];
         for(i=0; i<16; i++)
         {
@@ -132,10 +158,10 @@ int main(void){
                 }
                 result_sw[i] = sum;
         }
-    clock_gettime(CLOCK_MONOTONIC, &end1);
+    clock_gettime(CLOCK_MONOTONIC, &end0);
 
-    printf("* SW end\n");
-	
+
+	clock_gettime(CLOCK_MONOTONIC, &begin1);
 	// COO to CSR encoding
 	uint8_t row_ptr[17];
 
@@ -153,6 +179,15 @@ int main(void){
 	for(i=1; i<17; i++){
 		row_ptr[i] += row_ptr[i-1];
 	}
+	clock_gettime(CLOCK_MONOTONIC, &end1);
+	
+	
+	printf("[row_ptr] ");
+	for(i=0; i<17; i++)
+	{
+		printf("%hhu ", row_ptr[i]);
+	}
+	
 
 	// coo_col to col_idx
 	int index;
@@ -171,7 +206,7 @@ int main(void){
 	}
 	
 	// HW Data Transfer & Multiplication
-		printf("* input copy to onchip M10K memory\n");
+
         clock_gettime(CLOCK_MONOTONIC, &begin2);
         memcpy((void *)in_vector_ptr, in_vector, 16*2);
         memcpy((void *)mat_vector_ptr, value, num_nnz*2);
@@ -179,7 +214,7 @@ int main(void){
         memcpy((void *)col_idx_ptr, col_idx, index);
         clock_gettime(CLOCK_MONOTONIC, &end2);	
 	
-		printf("* polling\n");
+
         clock_gettime(CLOCK_MONOTONIC, &begin3);
         *(onchip_ptr) = 1;
         while(*(onchip_ptr) != 0)
@@ -187,16 +222,15 @@ int main(void){
                 ;
         }
         clock_gettime(CLOCK_MONOTONIC, &end3);
-        printf("* HW end\n");
 	
-	//
-		printf("[SW output] ");
+		printf("\n\n");
+		printf("[HPS] ");
 		for(i=0; i<16; i++)
         {
             printf("%f  ", *(result_sw + i));
         }
 		printf("\n");
-		printf("[HW output] ");
+		printf("[FPGA] ");
 		for(i=0; i<8; i++)
         {
                 // 32비트 정수를 부동 소수점 숫자로 변환하여 출력
@@ -218,14 +252,14 @@ int main(void){
 		return (1);
 	}
 	
-	fprintf(outputFile, "[SW Output]\n");
+	fprintf(outputFile, "[HPS]\n");
 	for (i=0; i<16; i++)
 	{
 		fprintf(outputFile, "%f ", result_sw[i]);
 	}
 	fprintf(outputFile, "\n");
 	
-	fprintf(outputFile, "HW Output:\n");
+	fprintf(outputFile, "[FPGA]\n");
 	for (i = 0; i < 8; i++) {
 		uint32_t int_value = *(result_ptr + i);
 		__fp16 float_values[2];
@@ -241,6 +275,15 @@ int main(void){
 	free(coo_col);
 	free(value);
 	free(col_idx);
+	
+	a = ((double)(end0.tv_sec - begin0.tv_sec)*1000000) + ((double)((end0.tv_nsec - begin0.tv_nsec) / 1000));
+    b = ((double)(end1.tv_sec - begin1.tv_sec)*1000000) + ((double)((end1.tv_nsec - begin1.tv_nsec) / 1000));
+    c = ((double)(end2.tv_sec - begin2.tv_sec)*1000000) + ((double)((end2.tv_nsec - begin2.tv_nsec) / 1000));
+    d = ((double)(end3.tv_sec - begin3.tv_sec)*1000000) + ((double)((end3.tv_nsec - begin3.tv_nsec) / 1000));
+	
+	printf("\n SW matmul performance : %lf us, HW matmul performance : %lf us", a, d);
+	printf("\n HW encoding performance : %lf us, SW to HW data transfer : %lf us", b, c);
+	printf("\n");
 	
 	return 0;
 }

@@ -20,7 +20,7 @@ int main(void) {
     uint8_t *coo_row = (uint8_t *)malloc(num_nnz * sizeof(uint8_t));
     uint8_t *coo_col = (uint8_t *)malloc(num_nnz * sizeof(uint8_t));
     __fp16 *value = (__fp16 *)malloc(num_nnz * sizeof(__fp16));
-    __fp16 vector[16]; // 크기를 고정
+    __fp16 vector[16];
 
     srand(time(NULL));
     for (i = 0; i < num_nnz; i++) {
@@ -41,7 +41,7 @@ int main(void) {
 
     fprintf(matrixFile, "%hhu\n", num_nnz);
     for (i = 0; i < num_nnz; i++) {
-        fprintf(matrixFile, "%hhu %hhu %hf\n", coo_row[i], coo_col[i], (float)value[i]);
+        fprintf(matrixFile, "%hhu %hhu %f\n", coo_row[i], coo_col[i], (float)value[i]);
     }
 
     fclose(matrixFile);
@@ -53,7 +53,7 @@ int main(void) {
     }
 
     for (i = 0; i < 16; i++) {
-        fprintf(vectorFile, "%hf\n", (float)vector[i]);
+        fprintf(vectorFile, "%f\n", (float)vector[i]);
     }
 
     fclose(vectorFile);

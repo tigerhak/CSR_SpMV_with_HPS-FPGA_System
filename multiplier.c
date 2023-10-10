@@ -116,7 +116,11 @@ int main(void){
 
         // "vector.txt" 파일 닫기
         fclose(vectorFile);
-
+	
+		for (i=0; i<16; i++)
+		{
+			in_vector[i] = (__fp16)inputss[i];
+		}
 
         // SW Multiplication
         clock_gettime(CLOCK_MONOTONIC, &begin0);
@@ -134,7 +138,7 @@ int main(void){
                 result_sw[i] = sum;
         }
         clock_gettime(CLOCK_MONOTONIC, &end0);
-
+		
 
         clock_gettime(CLOCK_MONOTONIC, &begin1);
         // COO to CSR encoding
@@ -199,14 +203,14 @@ int main(void){
                 return (1);
         }
 
-        fprintf(outputFile, "[HPS]\n");
+        fprintf(outputFile, "[SW SpMV]\n");
         for (i=0; i<16; i++)
         {
                 fprintf(outputFile, "%f\n", result_sw[i]);
         }
         fprintf(outputFile, "\n");
 
-        fprintf(outputFile, "[FPGA]\n");
+        fprintf(outputFile, "[HW SpMV]\n");
         for (i = 0; i < 8; i++) {
                 uint32_t int_value = *(result_ptr + i);
                 __fp16 float_values[2];
@@ -225,17 +229,14 @@ int main(void){
         free(col_idx);
 
         a = ((double)(end0.tv_sec - begin0.tv_sec)*1000000) + ((double)((end0.tv_nsec - begin0.tv_nsec) / 1000));
-
         b = ((double)(end1.tv_sec - begin1.tv_sec)*1000000) + ((double)((end1.tv_nsec - begin1.tv_nsec) / 1000));
-
         c = ((double)(end2.tv_sec - begin2.tv_sec)*1000000) + ((double)((end2.tv_nsec - begin2.tv_nsec) / 1000));
-
         d = ((double)(end3.tv_sec - begin3.tv_sec)*1000000) + ((double)((end3.tv_nsec - begin3.tv_nsec) / 1000));
 
-		printf("[SW matmul performance] %.1lf us\n\n", a);
-		printf("[HW matmul performance] %.1lf us\n", d);
-		printf("[HW encoding performance] %.1lf us\n", b);
-		printf("[SW to HW data transfer] %.1lf us\n\n", c);
+		printf("[SW SpMV performance]		%.1lf us\n\n", a);
+		printf("[HW SpMV performance]		%.1lf us\n", d);
+		printf("[HW encoding performance]	%.1lf us\n", b);
+		printf("[SW to HW data transfer]	%.1lf us\n\n", c);
 
         return 0;
 }

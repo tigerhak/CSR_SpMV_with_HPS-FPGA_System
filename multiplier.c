@@ -137,7 +137,7 @@ int main(void){
 	}
 	printf("\n");
 	printf("[matrix] ");
-	for (i=0; i<16; i++){
+	for (i=0; i<num_nnz; i++){
 		printf("%f ", value[i]);
 	}
 	printf("\n");

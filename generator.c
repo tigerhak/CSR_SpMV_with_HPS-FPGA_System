@@ -17,21 +17,22 @@ int main(void) {
         return 1;
     }
 
-    // 생성할 COO 행렬 데이터를 위한 배열 할당
     uint8_t *coo_row = (uint8_t *)malloc(num_nnz * sizeof(uint8_t));
     uint8_t *coo_col = (uint8_t *)malloc(num_nnz * sizeof(uint8_t));
     __fp16 *value = (__fp16 *)malloc(num_nnz * sizeof(__fp16));
-    __fp16 *vector = (__fp16 *)malloc(16 * sizeof(__fp16)); 
+    __fp16 vector[16]; // 크기를 고정
 
-    // COO 행렬 초기화
     srand(time(NULL));
     for (i = 0; i < num_nnz; i++) {
         coo_row[i] = i / 16;
         coo_col[i] = i % 16;
-        value[i] = (__fp16)(10.0 * rand() / (double)RAND_MAX); 
+        value[i] = (__fp16)(10.0 * rand() / (double)RAND_MAX);
     }
 
-    // 생성된 COO 행렬을 파일에 저장
+    for (i = 0; i < 16; i++) {
+        vector[i] = (__fp16)(10.0 * rand() / (double)RAND_MAX);
+    }
+
     FILE *matrixFile = fopen("/home/linaro/matrix.txt", "w");
     if (matrixFile == NULL) {
         printf("[ERROR] Unable to write to matrix.txt\n");
@@ -45,7 +46,6 @@ int main(void) {
 
     fclose(matrixFile);
 
-    // 생성된 input vector를 파일에 저장
     FILE *vectorFile = fopen("/home/linaro/vector.txt", "w");
     if (vectorFile == NULL) {
         printf("[ERROR] Unable to write to vector.txt\n");
@@ -58,11 +58,9 @@ int main(void) {
 
     fclose(vectorFile);
 
-    // 할당된 메모리 해제
     free(coo_row);
     free(coo_col);
     free(value);
-    free(vector);
 
     return 0;
 }

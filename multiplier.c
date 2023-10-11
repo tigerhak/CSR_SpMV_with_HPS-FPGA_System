@@ -209,6 +209,10 @@ int main(void){
                 fprintf(outputFile, "%f\n", result_sw[i]);
         }
         fprintf(outputFile, "\n");
+		
+		double x1, x2;
+		x1 = 0.0;
+		x2 = 0.0;
 
         fprintf(outputFile, "[HW SpMV]\n");
         for (i = 0; i < 8; i++) {
@@ -216,7 +220,20 @@ int main(void){
                 __fp16 float_values[2];
                 memcpy(float_values, &int_value, sizeof(__fp16) * 2);
                 fprintf(outputFile, "%f\n%f\n", (float)float_values[0], (float)float_values[1]);
+				
+				if ((float)result_sw[2*i+1] == 0.0) x1 += 0.0;
+				else x1 += (fabs((float)result_sw[2*i+1] - (float)float_values[1]) / (float)result_sw[2*i+1]);
+				//printf("%f\n", x1);
+				
+				if ((float)result_sw[2*i] == 0.0) x2 += 0.0;
+				else x2 += (fabs((float)result_sw[2*i] - (float)float_values[0]) / (float)result_sw[2*i]);
+				//printf("%f\n", x2);
+				
         }
+		
+		double accuracy;
+		accuracy = 100 - ((x1+x2) / 16)*100;
+		printf("\n[HW SpMV accuracy] %.1f %%\n", accuracy);
 
         fprintf(outputFile, "\n");
         printf("\n");

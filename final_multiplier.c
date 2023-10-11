@@ -226,7 +226,7 @@ int main(void){
 		for(i=0; i<num_nnz/2; i++){
 			printf("%hhu ", coo_col[i]);
 		}
-		
+		printf("\n\n");
 		printf("**********Output**********\n\n");
 		printf("[SW output] ");
 		for(i=0; i<16; i++){

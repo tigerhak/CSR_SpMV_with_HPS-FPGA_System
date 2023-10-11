@@ -228,7 +228,7 @@ int main(void){
 			printf("%hhu ", *(col_idx_ptr+i));
 		}
 		for(i=0; i<num_nnz*2; i++){
-			printf("%f "), *(mat_vector_ptr+i));
+			printf("%f ", *(mat_vector_ptr+i));
 		}
 		
 		// sw output
@@ -237,7 +237,7 @@ int main(void){
 		}
 		// hw output
 		for(i=0; i<16; i++){
-			printf("%f ", *(result+ptr)+i);
+			printf("%f ", *(result_ptr+i);
 		}
 
 

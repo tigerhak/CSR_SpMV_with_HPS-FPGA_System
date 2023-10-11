@@ -37,7 +37,7 @@ int main(void) {
         }
         atp1++;
         if (atp1 > 10000) {
-            printf("[ERROR] Unable to make row-partition");
+            printf("[ERROR] Unable to make row-partition\n");
             return 1;
         }
     }
@@ -58,7 +58,7 @@ int main(void) {
                 }
             } while (col == -1 && atp2 < 10000);
             if (col == -1) {
-                printf("[ERROR] Unable to make col-partition");
+                printf("[ERROR] Unable to make col-partition\n");
                 return 1;
             }
 

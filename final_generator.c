@@ -36,7 +36,7 @@ int main(void) {
             sum = sum + row[i];
         }
         atp1++;
-        if (atp1 > 10000000) {
+        if (atp1 > 100000) {
             printf("[ERROR] Unable to make row-partition\n");
             return 1;
         }
@@ -56,7 +56,7 @@ int main(void) {
                 if (used_cols[i] & (1 << col)) {
                     col = -1;
                 }
-            } while (col == -1 && atp2 < 10000000);
+            } while (col == -1 && atp2 < 100000);
             if (col == -1) {
                 printf("[ERROR] Unable to make col-partition\n");
                 return 1;

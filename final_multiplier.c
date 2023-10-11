@@ -215,6 +215,7 @@ int main(void){
 			}
 			printf("   %f \n", inputss[i]);
 		}
+		printf("[NOTICE] The Matrix Sparsity is %.1f %%\n", 100 - (float)num_nnz/256*100); 
 
 		printf("\n**********CSR Encoding**********\n\n");
 		printf("[row_ptr] ");

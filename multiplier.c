@@ -195,6 +195,52 @@ int main(void){
 
         clock_gettime(CLOCK_MONOTONIC, &end3);
 
+		// beautiful output //
+		// real matrix and vector, csr format, sw, hw
+
+		// real matrix
+		float matrix[16][16] = {0.0};
+		
+		for(i=0; i<num_nnz; i++){
+			int a = coo_row[i];
+			int b = coo_col[i];
+			float val = (float)value[i];
+			matrix[a][b] = val;
+		}
+		
+		for(i=0; i<16; i++){
+			for(j=0; j<16; j++){
+				printf("%f ",matrix[i][j]);
+			}
+			printf("\n");
+		}
+		
+		// real vector
+		for(i=0; i<16; i++){
+			printf("%f ", *(in_vector_ptr+i));
+		}
+		
+		// csr format
+		for(i=0; i<32; i++){
+			printf("%hhu ", *(row_ptr_ptr+i));
+		}
+		for(i=0; i<num_nnz/2; i++){
+			printf("%hhu ", *(col_idx_ptr+i));
+		}
+		for(i=0; i<num_nnz*2; i++){
+			printf("%f "), *(mat_vector_ptr+i));
+		}
+		
+		// sw output
+		for(i=0; i<16; i++){
+			printf("%f ", result_sw[i]);
+		}
+		// hw output
+		for(i=0; i<16; i++){
+			printf("%f ", *(result+ptr)+i);
+		}
+
+
         // make output.txt
         FILE *outputFile = fopen("/home/linaro/output.txt", "w");
         if (outputFile == NULL)

@@ -223,7 +223,7 @@ int main(void){
 			printf("%hhu ", row_ptr[i]);
 		}
 		printf("\n[col_idx] ");
-		for(i=0; i<num_nnz/2; i++){
+		for(i=0; i<num_nnz; i++){
 			printf("%hhu ", coo_col[i]);
 		}
 		printf("\n[mat_vec] ");

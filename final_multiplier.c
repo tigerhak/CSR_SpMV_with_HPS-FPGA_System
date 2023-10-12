@@ -283,9 +283,9 @@ int main(void){
         }
 		
 		printf("\n**********Evaluation**********\n");
-		double accuracy;
-		accuracy = 100 - ((x1+x2) / 16)*100;
-		printf("\n[HW SpMV accuracy]		%.1f %%\n", accuracy);
+		double error;
+		error = ((x1+x2) / 16)*100;
+		printf("\n[HW SpMV error]		%.4f %%\n", error);
 
         fprintf(outputFile, "\n");
         printf("\n");
